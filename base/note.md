@@ -959,3 +959,86 @@ Radius                        Area
 ------------------------------------------
 The total area of circles is  17333.316809
 ```
+## chapter09 字符串和文本I/O
+> 程序清单9-1 CheckPalindrome.java
+```java
+import java.util.Scanner;
+
+public class CheckPalindrome {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        //Prompt the user to enter a string
+        System.out.print("Enter a string: ");
+        String s = input.nextLine();
+
+        if(isPalindrome(s))
+            System.out.println(s + " is a palindrome");
+        else
+            System.out.println(s + " is not a palindrome");
+        
+        input.close();
+    }
+
+    //Check if a string is a palindrome
+    public static boolean isPalindrome(String s) {
+        int low = 0;
+        int high = s.length() - 1;
+
+        while(low < high) {
+            if(s.charAt(low) != s.charAt(high))
+                return false;
+            low++;
+            high--;
+        }
+
+        return true;
+    }
+}
+```
+反馈
+```sh
+Enter a string: moon
+moon is not a palindrome
+```
+> 程序清单9-2 HexToDecimalConversion.java
+```java
+import java.util.Scanner;
+
+public class HexToDecimalConversion {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        //Prompt the user to enter a string
+        System.out.print("Enter a hex number: ");
+        String hex = input.nextLine();
+
+        System.out.println("The decimal value for hex number " + hex + " is " + hexToDecimal(hex.toUpperCase()));
+        input.close();
+    }
+
+    public static int hexToDecimal(String hex) {
+        int decimalValue = 0;
+        for(int i=0; i<hex.length(); i++) {
+            char hexChar = hex.charAt(i);
+            decimalValue = decimalValue * 16 + hexCharToDecimal(hexChar);
+        }
+
+        return decimalValue;
+    }
+
+    public static int hexCharToDecimal(char ch) {
+        if(ch >= 'A' && ch <= 'F')
+            return 10 + ch - 'A';
+        else
+            return ch - '0';
+    }
+}
+```
+反馈
+```sh
+Enter a hex number: af71
+The decimal value for hex number af71 is 44913
+```
+### 9.3 字符类Character
+- Java为每一种基本数据类型都提供了一个包装类。这些类是Chaacter\Boolean\Byte\Short\Integer\Long\Float\Double,它们分别对应基本类型char\boolean\byte\short\int\long\float\double。
