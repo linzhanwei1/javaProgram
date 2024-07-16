@@ -1042,3 +1042,124 @@ The decimal value for hex number af71 is 44913
 ```
 ### 9.3 字符类Character
 - Java为每一种基本数据类型都提供了一个包装类。这些类是Chaacter\Boolean\Byte\Short\Integer\Long\Float\Double,它们分别对应基本类型char\boolean\byte\short\int\long\float\double。
+
+## chapter10 关于对象的思考
+### 10.2 不可变对象和类
+- 要使一个类成为不可变的，它必须满足下面的需求
+    - 所有数据域都是私有的
+    - 没有修改器方法
+    - 没有一个访问器方法会返回一个指向可变数据域的引用
+### 10.3 变量的作用域
+> 程序清单10-1 TestLoanClass.java
+```java
+import java.util.Scanner;
+
+public class TestLoanClass {
+    public static void main(String[] args) {
+        // Create a Scanner
+        Scanner input = new Scanner(System.in);
+
+        // Enter yearly interest rate
+        System.out.print("Enter yearly interest rate, for example, 8.25: ");
+        double annualInterestRate = input.nextDouble();
+
+        // Enter number of years
+        System.out.print("Enter number of years as an integer: ");
+        int numberOfYears = input.nextInt();
+
+        // Enter loan amount
+        System.out.print("Enter loan amount, for example, 120000.95: ");
+        double loanAmount = input.nextDouble();
+
+        // Create a loan object
+        Loan loan = new Loan(annualInterestRate, numberOfYears, loanAmount);
+
+        // Display loan date, monthly payment, and total payment
+        System.out.printf("The loan was created on %s\n" + "The monthly payment is %.2f\nThe total payment is %.2f\n",
+                loan.getLoanDate().toString(), loan.getMonthlyPayment(), loan.getTotalPayment());
+
+        input.close();
+    }
+}
+```
+> 程序清单10-2 Loan.java
+```java
+public class Loan {
+    private double annualInterestRate;
+    private int numberOfYears;
+    private double loanAmount;
+    private java.util.Date loanDate;
+
+    // Default constructor
+    public Loan() {
+        this(2.5, 1, 1000);
+    }
+
+    // Construct a loan with specified annual interest rate, number of years, and
+    // loan amount
+    public Loan(double annualInterestRate, int numberOfYears, double loanAmount) {
+        this.annualInterestRate = annualInterestRate;
+        this.numberOfYears = numberOfYears;
+        this.loanAmount = loanAmount;
+        loanDate = new java.util.Date();
+    }
+
+    // Return annualInterestRate
+    public double getAnnualInterestRate() {
+        return annualInterestRate;
+    }
+
+    // Set a new annualInterestRate
+    public void setAnnualInterestRate(double annualInterestRate) {
+        this.annualInterestRate = annualInterestRate;
+    }
+
+    // Return numberOfYears
+    public int getNumberOfYears() {
+        return numberOfYears;
+    }
+
+    // Set a new numberOfYears
+    public void setNumberOfYears(int numberOfYears) {
+        this.numberOfYears = numberOfYears;
+    }
+
+    // Return loanAmout
+    public double getLoanAmount() {
+        return loanAmount;
+    }
+
+    // Set a new loanAmount
+    public void setLoanAmount(double loanAmout) {
+        this.loanAmount = loanAmout;
+    }
+
+    // Find monthly payment
+    public double getMonthlyPayment() {
+        double monthlyInterestRate = annualInterestRate / 1200;
+        double monthlyPayment = loanAmount * monthlyInterestRate
+                / (1 - (Math.pow(1 / (1 + monthlyInterestRate), numberOfYears * 12)));
+        return monthlyPayment;
+    }
+
+    // Find total payment
+    public double getTotalPayment() {
+        double totalPayment = getMonthlyPayment() * numberOfYears * 12;
+        return totalPayment;
+    }
+
+    // Return loan date
+    public java.util.Date getLoanDate() {
+        return loanDate;
+    }
+}
+```
+反馈
+```sh
+Enter yearly interest rate, for example, 8.25: 2.5
+Enter number of years as an integer: 5
+Enter loan amount, for example, 120000.95: 1000
+The loan was created on Tue Jul 16 21:22:27 CST 2024
+The monthly payment is 17.75
+The total payment is 1064.84
+```
