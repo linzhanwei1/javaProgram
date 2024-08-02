@@ -1,0 +1,85 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+    archiveBase = 'GRADLE_USER_HOME'
+    archivePath = 'wrapper/dists'
+    distributionBase = 'GRADLE_USER_HOME'
+    distributionPath = 'wrapper/dists'
+    distributionUrl = 'https://mirrors.aliyun.com/gradle/distributions/v2.4.0/gradle-2.4-all.zip'
+}
+
+task customTask1 {
+    doFirst {
+        println 'customTask1:doFirst'
+    }
+    doLast {
+        println 'customTask1:doLast'
+    }
+}
+
+tasks.create("customTask2") {
+    doFirst {
+        println 'customTask2:doFirst'
+    }
+    doLast {
+        println 'customTask2:doLast'
+    }
+}
+
+// 3.5任务依赖
+task ex35Hello << {
+    println 'hello'
+}
+
+task ex35Main(dependsOn: ex35Hello) {
+    doLast {
+        println 'main'
+    }
+}
+
+task ex35World << {
+    println 'world'
+}
+
+task ex35MultiTask {
+    dependsOn ex35Hello, ex35World
+    doLast {
+        println 'multiTask'
+    }
+}
+
+// 3.6任务间通过API控制、交互
+task ex36Hello << {
+    println 'dowLast1'
+}
+
+ex36Hello.doFirst {
+    println 'dowFirst'
+}
+
+ex36Hello.doLast {
+    println project.hasProperty('ex36Hello')
+    println 'dowLast2'
+}
+
+// 3.7自定义属性
+// 自定义一个Project的属性
+ext.age = 18
+
+// 通过代码块同时自定义多个属性
+ext {
+    phone = 1334512
+    address = ''
+
+    task ex37CustomProperty << {
+        println "age is: ${age}"
+        println "phone is: ${phone}"
+        println "address is: ${address}"
+    }
+}
+
+// 3.8脚本即代码，代码也是脚本
+def buildTime() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd')
+    return formattedDate
+}

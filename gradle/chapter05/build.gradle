@@ -1,0 +1,25 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+    archiveBase = 'GRADLE_USER_HOME'
+    archivePath = 'wrapper/dists'
+    distributionBase = 'GRADLE_USER_HOME'
+    distributionPath = 'wrapper/dists'
+    distributionUrl = 'https://mirrors.aliyun.com/gradle/distributions/v2.4.0/gradle-2.4-all.zip'
+}
+
+// 5.2如何应用一个插件
+apply from:'version.gradle'
+task ex52PrintlnTask << {
+    println "App version:${versionName}, versionCode:${versionCode}"
+}
+
+// 5.3自定义插件
+apply plugin: EX53CustomPlugin
+
+class EX53CustomPlugin implements Plugin<Project> {
+    void apply(Project project) {
+        project.task('ex53CustomTask') << {
+            println "This is a custom plugin"
+        }
+    }
+}

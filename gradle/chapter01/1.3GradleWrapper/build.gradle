@@ -1,0 +1,8 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+    archiveBase = 'GRADLE_USER_HOME'
+    archivePath = 'wrapper/dists'
+    distributionBase = 'GRADLE_USER_HOME'
+    distributionPath = 'wrapper/dists'
+    distributionUrl = 'https://mirrors.aliyun.com/gradle/distributions/v2.4.0/gradle-2.4-all.zip'
+}

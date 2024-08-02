@@ -1,0 +1,86 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+    archiveBase = 'GRADLE_USER_HOME'
+    archivePath = 'wrapper/dists'
+    distributionBase = 'GRADLE_USER_HOME'
+    distributionPath = 'wrapper/dists'
+    distributionUrl = 'https://mirrors.aliyun.com/gradle/distributions/v2.4.0/gradle-2.4-all.zip'
+}
+
+// 4.1多种方式创建任务
+// 第一种是直接以一个任务名字创建任务的方式
+def Task ex41CreateTask1 = task(ex41CreateTask1)
+ex41CreateTask1.doLast {
+    println "Create method prototype as: Task(String name) throws InvalidUserDataException"
+}
+
+// 第二种是以一个任务名字+一个对该任务配置的Map对象来创建任务
+def Task ex41CreateTask2 = task(group:BasePlugin.BUILD_GROUP, ex41CreateTask2)
+
+ex41CreateTask2.doLast {
+    println "Create method prototype as: Task task(Map<String, ?> args, String name) throws InvalidUserDataException"
+    println "Group: ${ex41CreateTask2.group}"
+}
+
+// 第三种方式就是人物名字+闭包配置的方式
+task ex41CreateTask3 {
+    description 'Demo task creation'
+    doLast {
+        println "Create method prototype as: Task task(String name, Closure configureClosure)"
+        println "Task desc: ${description}"
+    }
+}
+
+// 第四种
+tasks.create('ex41CreateTask4') {
+    description 'Demo task creation'
+    doLast {
+        println "Create method prototype as: Task create(String name, Closure configureClosure) throws InvalidUserDataException"
+        println "Task desc: ${description}"
+    }
+}
+
+//4.2 多种方式访问任务
+task ex42AccessTask1
+ex42AccessTask1.doLast {
+    println 'ex42AccessTask1.doLast'
+}
+
+// 任务都是通过TaskContainer创建的，其实TaskContainer就是我们创建任务的集合，在Project中我们可以通过tasks属性访问TaskContainer
+task ex42AccessTask2
+tasks['ex42AccessTask2'].doLast {
+    println 'ex42AccessTask2.doLast'
+}
+
+// 通过路径访问
+//一种是get,找不到该任务时抛出UnknownTaskException异常
+//一种是find,找不到该任务时返回null
+
+task ex42AccessTask3
+tasks['ex42AccessTask3'].doLast {
+    println tasks.findByPath(':example42:ex42AccessTask3')
+}
+
+// 通过名称访问
+task ex42AccessTask4
+tasks['ex42AccessTask4'].doLast {
+    println tasks.findByName('ex42AccessTask4')
+    println tasks.getByName('ex42AccessTask4')
+    println tasks.findByName('nofile')
+}
+
+// 4.3 任务分组和描述
+def Task myTask = task ex43GroupTask
+myTask.group = BasePlugin.BUILD_GROUP
+myTask.description = 'This is a guided task for construction.'
+
+myTask.doLast {
+    println "group:${group}, description:${description}"
+}
+
+// 4.4<<操作符
+task(ex44DoLast) << {
+    println "ex44DoLast"
+}
+
+// 4.5任务的执行分析
